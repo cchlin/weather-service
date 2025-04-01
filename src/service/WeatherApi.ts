@@ -1,37 +1,47 @@
 import { config } from "../config/config";
 
+const CITY = "Seattle";
 export class WeatherApi {
   async getCurrentWeather() {
-    const url = this.buildUrl("weather");
+    const data = await this.fetchData("weather", CITY);
+    console.log(`Current weather in ${CITY}: `, data);
+  }
+
+  async getForecast() {
+    const data = await this.fetchData("forecast", CITY);
+    console.log(`Forecast for ${CITY}: `, data);
+  }
+
+  private async fetchData(endpoint: string, city: string): Promise<any> {
+    const url = this.buildUrl(endpoint, city);
 
     try {
-      const res = await fetch(url.href);
-      if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
-      const data = await res.json();
-      console.log("Current weather:", data);
+      const res = await fetch(url);
+
+      if (!res.ok) {
+        throw new Error(`HTTP error: ${res.status}`);
+      }
+
+      return res.json();
     } catch (err) {
       if (err instanceof Error) {
-        console.error("Error fetching current weather: ", err.message);
+        console.error(`Error fetching ${endpoint} for ${city}`, err.message);
       } else {
         console.error(
-          "Unknown error occurred while fetching current weather: ",
+          `unknown error occurred while fetching ${endpoint} for ${city}`,
           err
         );
       }
     } finally {
-      console.log("Done fetching");
+      console.log(`Done fetching ${endpoint} for ${city}`);
     }
   }
 
-  async getForecase() {
-    const url = this.buildUrl("forecase");
-  }
-
-  private buildUrl(endpoint: string): URL {
+  private buildUrl(endpoint: string, city: string): string {
     const url = new URL(endpoint, config.baseUrl);
-    url.searchParams.append("q", "Seattle");
+    url.searchParams.append("q", city);
     url.searchParams.append("appid", config.apiKey);
 
-    return url;
+    return url.href;
   }
 }

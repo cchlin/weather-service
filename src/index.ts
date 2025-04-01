@@ -18,6 +18,7 @@ const api = new WeatherApi();
 
 const run = () => {
   api.getCurrentWeather();
+  api.getForecast();
 };
 
 run();
