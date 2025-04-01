@@ -1,12 +1,23 @@
-import { createServer } from "node:http";
+// import { createServer } from "node:http";
+//
+// const port = process.env.PORT || 3000;
+//
+// const server = createServer((req, res) => {
+// res.writeHead(200, { "Content-Type": "application/json" });
+// res.end(JSON.stringify({ status: "Hello from backend" }));
+// });
+//
+// server.listen(port, () => {
+// console.log(`Server start running...`);
+// });
+//
 
-const port = process.env.PORT || 3000;
+import { WeatherApi } from "./service/WeatherApi";
 
-const server = createServer((req, res) => {
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ status: "Hello from backend" }));
-});
+const api = new WeatherApi();
 
-server.listen(port, () => {
-  console.log(`Server start running...`);
-});
+const run = () => {
+  api.getCurrentWeather();
+};
+
+run();
