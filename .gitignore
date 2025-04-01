@@ -1,0 +1,14 @@
+# Node modules
+node_modules/
+
+# Output of TypeScript
+dist/
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+
+# OS specific
+.DS_Store
