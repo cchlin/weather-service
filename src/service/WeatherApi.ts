@@ -2,10 +2,7 @@ import { config } from "../config/config";
 
 export class WeatherApi {
   async getCurrentWeather() {
-    const city = "Seattle";
-    const url = new URL("weather", config.baseUrl);
-    url.searchParams.append("q", city);
-    url.searchParams.append("appid", config.apiKey);
+    const url = this.buildUrl("weather");
 
     try {
       const res = await fetch(url.href);
@@ -24,5 +21,17 @@ export class WeatherApi {
     } finally {
       console.log("Done fetching");
     }
+  }
+
+  async getForecase() {
+    const url = this.buildUrl("forecase");
+  }
+
+  private buildUrl(endpoint: string): URL {
+    const url = new URL(endpoint, config.baseUrl);
+    url.searchParams.append("q", "Seattle");
+    url.searchParams.append("appid", config.apiKey);
+
+    return url;
   }
 }
