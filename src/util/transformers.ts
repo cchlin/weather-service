@@ -13,7 +13,7 @@ export const mapToFields = (
     feels_like: source.main.feels_like,
     temp_min: source.main.temp_min,
     temp_max: source.main.temp_max,
-    weather: source.weather[0].description,
+    weather: source.weather[0].main,
     precipitatin:
       source.rain?.["1h"] ||
       source.rain?.["3h"] ||
