@@ -14,16 +14,17 @@
 
 // import { config } from "./config/config";
 import { WeatherApi } from "./service/WeatherApi";
+import { WeatherRepo } from "./repository/WeatherRepo";
 
 const api = new WeatherApi();
 
 const cities: string[] = ["Seattle", "New York", "Paris", "Taipei", "Tokyo"];
 
-const run = () => {
+const run = async () => {
   // for (const city of cities) {
-  api.getCurrentWeather("Seattle");
+  console.log(await api.getCurrentWeather("Seattle"));
   // }
-  api.getForecast("Seattle");
+  console.log(await api.getForecast("Seattle"));
 };
 
 run();
