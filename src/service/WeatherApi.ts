@@ -2,6 +2,8 @@ import { config } from "../config/config";
 import { CurrentWeather, Forecast } from "../model/weatherModels";
 import { mapToFields } from "../util/transformers";
 
+const UNIT = "imperial";
+
 export class WeatherApi {
   async getCurrentWeather(city: string): Promise<CurrentWeather | undefined> {
     const data = await this.fetchData("weather", city);
@@ -68,6 +70,7 @@ export class WeatherApi {
     const url = new URL(endpoint, config.baseUrl);
     url.searchParams.append("q", city);
     url.searchParams.append("appid", config.apiKey);
+    url.searchParams.append("units", UNIT);
 
     return url.href;
   }
