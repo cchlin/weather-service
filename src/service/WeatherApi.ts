@@ -1,15 +1,14 @@
 import { config } from "../config/config";
 
-const CITY = "Seattle";
 export class WeatherApi {
-  async getCurrentWeather() {
-    const data = await this.fetchData("weather", CITY);
-    console.log(`Current weather in ${CITY}: `, data);
+  async getCurrentWeather(city: string) {
+    const data = await this.fetchData("weather", city);
+    console.log(`Current weather in ${city}: `, data);
   }
 
-  async getForecast() {
-    const data = await this.fetchData("forecast", CITY);
-    console.log(`Forecast for ${CITY}: `, data);
+  async getForecast(city: string) {
+    const data = await this.fetchData("forecast", city);
+    console.log(`Forecast for ${city}: `, data);
   }
 
   private async fetchData(endpoint: string, city: string): Promise<any> {

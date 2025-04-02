@@ -12,13 +12,19 @@
 // });
 //
 
+// import { config } from "./config/config";
 import { WeatherApi } from "./service/WeatherApi";
 
 const api = new WeatherApi();
 
+const cities: string[] = ["Seattle", "New York", "Paris", "Taipei", "Tokyo"];
+
 const run = () => {
-  api.getCurrentWeather();
-  api.getForecast();
+  for (const city of cities) {
+    api.getCurrentWeather(city);
+  }
+  // api.getCurrentWeather();
+  // api.getForecast();
 };
 
 run();
