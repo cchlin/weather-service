@@ -20,11 +20,10 @@ const api = new WeatherApi();
 const cities: string[] = ["Seattle", "New York", "Paris", "Taipei", "Tokyo"];
 
 const run = () => {
-  for (const city of cities) {
-    api.getCurrentWeather(city);
-  }
-  // api.getCurrentWeather();
-  // api.getForecast();
+  // for (const city of cities) {
+  api.getCurrentWeather("Seattle");
+  // }
+  api.getForecast("Seattle");
 };
 
 run();
