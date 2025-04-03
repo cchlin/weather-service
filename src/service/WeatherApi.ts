@@ -1,6 +1,4 @@
 import { config } from "../config/config";
-import { CurrentWeather, Forecast } from "../model/weatherModels";
-import { mapToFields } from "../util/transformers";
 
 const UNIT = "imperial";
 
