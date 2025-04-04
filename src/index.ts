@@ -15,35 +15,26 @@
 // import { config } from "./config/config";
 import { WeatherApi } from "./service/WeatherApi";
 import { WeatherRepo } from "./repository/WeatherRepo";
+import { WeatherService } from "./service/WeatherService";
+import { config } from "./config/config";
+import postgres from "postgres";
 
 const api = new WeatherApi();
-const repo = new WeatherRepo();
-
 const cities: string[] = ["Seattle", "New York", "Paris", "Taipei", "Tokyo"];
 
 const run = async () => {
-  // for (const city of cities) {
-  // console.log(await api.getCurrentWeather("Seattle"));
-  const current = await api.getCurrentWeather("Seattle");
-  if (current) {
-    repo.saveCurrentWeather(current);
-  }
-  // }
-  // console.log(await api.getForecast("Seattle"));
-  const forecastList = await api.getForecast("Seattle");
-  if (forecastList) {
-    for (const forecast of forecastList) {
-      await repo.saveForecast(forecast);
-    }
-  }
+  const sql = postgres(config.dbUrl);
+  const repo = new WeatherRepo(sql);
+  const service = new WeatherService(api, repo);
+  console.log(await service.fetchSaveCurrent("Seattle"));
+  await sql.end();
+  // await service.fetchSaveForecast("Seattle");
 
-  const list = await repo.getForecast("Seattle");
-  for (const item of list) {
-    console.log(item);
-  }
-  console.log("Forecast mock db retrieval done");
-  console.log(repo.getMostRecentWeather("Seattle"));
-  console.log("Weather mock db retrieval done");
+  // const list = await repo.getForecast("Seattle");
+  // for (const item of list) {
+  // console.log(item);
+  // }
+  // console.log(await repo.getMostRecentWeather("Seattle"));
 };
 
 run();
