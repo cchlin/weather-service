@@ -14,12 +14,13 @@ export class WeatherService {
         return false;
       } else {
         const transformed: CurrentWeather = {
-          city: current.city,
+          city: current.name,
           timestamp: new Date(current.dt * 1000), // response is in second but js/ts Date needs milliseconds so * 1000
           ...mapToFields(current),
         };
 
         await this.repo.saveCurrentWeather(transformed);
+        console.log(`Saved current weather for ${transformed.city}`);
         return true;
       }
     } catch (err) {
@@ -42,6 +43,8 @@ export class WeatherService {
         };
         await this.repo.saveForecast(transformed);
       }
+
+      console.log(`Saved forecast for ${city}`);
 
       return true;
     } catch (err) {
