@@ -26,8 +26,18 @@ const run = async () => {
   const sql = postgres(config.dbUrl);
   const repo = new WeatherRepo(sql);
   const service = new WeatherService(api, repo);
-  await service.fetchSaveCurrent("Seattle");
-  await service.fetchSaveForecast("Seattle");
+  // await service.fetchSaveCurrent(cities);
+  // await service.fetchSaveForecast(cities);
+  const weather = await service.getMostRecentWeather("Seattle");
+  if (!weather) {
+    console.log("wrong");
+  }
+  console.log(weather);
+  const forecast = await service.getForecast("Taipei");
+  if (!forecast || forecast.length == 0) {
+    console.log("wrong");
+  }
+  console.log(forecast);
   await sql.end();
 
   // const list = await repo.getForecast("Seattle");

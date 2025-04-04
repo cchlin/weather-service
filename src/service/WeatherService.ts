@@ -6,7 +6,45 @@ import { CurrentWeather, Forecast } from "../model/weatherModels";
 export class WeatherService {
   constructor(private api: WeatherApi, private repo: WeatherRepo) {}
 
-  async fetchSaveCurrent(city: string): Promise<boolean> {
+  async getMostRecentWeather(
+    city: string
+  ): Promise<CurrentWeather | undefined> {
+    return this.repo.getMostRecentWeather(city);
+  }
+
+  async getForecast(city: string): Promise<Forecast[] | undefined> {
+    return this.repo.getForecast(city);
+  }
+
+  async fetchSaveCurrent(cities: string[]): Promise<boolean> {
+    return this.runForFetchSave(cities, (city) =>
+      this.fetchSaveCurrentCity(city)
+    );
+  }
+
+  async fetchSaveForecast(cities: string[]): Promise<boolean> {
+    return this.runForFetchSave(cities, (city) =>
+      this.fetchSaveForecastCity(city)
+    );
+  }
+
+  private async runForFetchSave(
+    cities: string[],
+    action: (city: string) => Promise<boolean>
+  ): Promise<boolean> {
+    let allSucceeded = true;
+
+    for (const city of cities) {
+      const success = await action(city);
+      if (!success) {
+        allSucceeded = false;
+      }
+    }
+
+    return allSucceeded;
+  }
+
+  private async fetchSaveCurrentCity(city: string): Promise<boolean> {
     try {
       const current = await this.api.getCurrentWeather(city);
 
@@ -24,12 +62,12 @@ export class WeatherService {
         return true;
       }
     } catch (err) {
-      console.error(`Failed to fetch/save current weather for ${city}`, err);
+      console.error(`Failed to save current weather for ${city}`, err);
       return false;
     }
   }
 
-  async fetchSaveForecast(city: string): Promise<boolean> {
+  private async fetchSaveForecastCity(city: string): Promise<boolean> {
     try {
       const forecastList = await this.api.getForecast(city);
       if (!forecastList || !forecastList.list) return false;
@@ -52,7 +90,7 @@ export class WeatherService {
       console.log(`Done saving forecast for ${city}`);
       return true;
     } catch (err) {
-      console.error(`Failed to fetch/save forecast for ${city}`, err);
+      console.error(`Failed to save forecast for ${city}`, err);
       return false;
     }
   }
