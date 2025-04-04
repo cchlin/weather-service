@@ -21,30 +21,21 @@ import postgres from "postgres";
 
 const api = new WeatherApi();
 const cities: string[] = ["Seattle", "New York", "Paris", "Taipei", "Tokyo"];
+const INTERVAL = 1; // minute
 
 const run = async () => {
   const sql = postgres(config.dbUrl);
   const repo = new WeatherRepo(sql);
   const service = new WeatherService(api, repo);
-  // await service.fetchSaveCurrent(cities);
-  // await service.fetchSaveForecast(cities);
-  const weather = await service.getMostRecentWeather("Seattle");
-  if (!weather) {
-    console.log("wrong");
-  }
-  console.log(weather);
-  const forecast = await service.getForecast("Taipei");
-  if (!forecast || forecast.length == 0) {
-    console.log("wrong");
-  }
-  console.log(forecast);
-  await sql.end();
 
-  // const list = await repo.getForecast("Seattle");
-  // for (const item of list) {
-  // console.log(item);
-  // }
-  // console.log(await repo.getMostRecentWeather("Seattle"));
+  console.log(`[${new Date().toLocaleString()}] Fetching and saving data...`);
+  await service.fetchSaveCurrent(cities);
+  await service.fetchSaveForecast(cities);
+  console.log(`[${new Date().toLocaleString()}] Done.`);
+
+  await sql.end();
 };
 
 run();
+
+setInterval(run, INTERVAL * 60 * 1000);
