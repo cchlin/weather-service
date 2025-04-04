@@ -1,4 +1,4 @@
-import { config } from "../config/config";
+import { buildUrl } from "../util/transformers";
 
 const UNIT = "imperial";
 
@@ -12,7 +12,7 @@ export class WeatherApi {
   }
 
   private async fetchData(endpoint: string, city: string): Promise<any> {
-    const url = this.buildUrl(endpoint, city);
+    const url = buildUrl(endpoint, city, UNIT);
 
     try {
       const res = await fetch(url);
@@ -34,14 +34,5 @@ export class WeatherApi {
     } finally {
       console.log(`Done fetching ${endpoint} for ${city}`);
     }
-  }
-
-  private buildUrl(endpoint: string, city: string): string {
-    const url = new URL(endpoint, config.baseUrl);
-    url.searchParams.append("q", city);
-    url.searchParams.append("appid", config.apiKey);
-    url.searchParams.append("units", UNIT);
-
-    return url.href;
   }
 }

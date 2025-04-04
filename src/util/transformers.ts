@@ -1,3 +1,5 @@
+import { config } from "../config/config";
+
 export const mapToFields = (
   source: any
 ): {
@@ -20,4 +22,17 @@ export const mapToFields = (
       source.snow?.["1h"] ||
       source.snow?.["3h"],
   };
+};
+
+export const buildUrl = (
+  endpoint: string,
+  city: string,
+  unit: string
+): string => {
+  const url = new URL(endpoint, config.baseUrl);
+  url.searchParams.append("q", city);
+  url.searchParams.append("appid", config.apiKey);
+  url.searchParams.append("units", unit);
+
+  return url.href;
 };
