@@ -31,15 +31,16 @@ export class WeatherRepo {
   async saveForecast(data: Forecast): Promise<Forecast> {
     const forecast = await this.sql<Forecast[]>`
       INSERT INTO forecast (
-      city,
-      forecast_time,
-      fetched_time,
-      temperature,
-      feels_like,
-      temp_min,
-      temp_max,
-      weather,
-      precipitation) VALUES (
+        city,
+        forecast_time,
+        fetched_time,
+        temperature,
+        feels_like,
+        temp_min,
+        temp_max,
+        weather,
+        precipitation
+      ) VALUES (
         ${data.city},
         ${data.forecast_time},
         ${data.fetched_time},
@@ -48,8 +49,18 @@ export class WeatherRepo {
         ${data.temp_min},
         ${data.temp_max},
         ${data.weather},
-        ${data.precipitation ?? null})
-      RETURNING *;`;
+        ${data.precipitation ?? null}
+      )
+      ON CONFLICT (city, forecast_time) DO UPDATE SET
+        fetched_time = EXCLUDED.fetched_time,
+        temperature = EXCLUDED.temperature,
+        feels_like = EXCLUDED.feels_like,
+        temp_min = EXCLUDED.temp_min,
+        temp_max = EXCLUDED.temp_max,
+        weather = EXCLUDED.weather,
+        precipitation = EXCLUDED.precipitation
+      RETURNING *;
+    `;
 
     return forecast[0];
   }
