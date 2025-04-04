@@ -26,9 +26,9 @@ const run = async () => {
   const sql = postgres(config.dbUrl);
   const repo = new WeatherRepo(sql);
   const service = new WeatherService(api, repo);
-  console.log(await service.fetchSaveCurrent("Seattle"));
+  await service.fetchSaveCurrent("Seattle");
+  await service.fetchSaveForecast("Seattle");
   await sql.end();
-  // await service.fetchSaveForecast("Seattle");
 
   // const list = await repo.getForecast("Seattle");
   // for (const item of list) {

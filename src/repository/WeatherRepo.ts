@@ -22,14 +22,36 @@ export class WeatherRepo {
        ${data.temp_min},
        ${data.temp_max},
        ${data.weather},
-       ${data.precipitation ?? null});`;
+       ${data.precipitation ?? null})
+      RETURNING *;`;
 
     return weather[0];
   }
 
-  async saveForecast(data: Forecast): Promise<void> {
-    // dummyForecast.push(data);
-    // console.log(`Saved forecast for ${data.city} at ${data.forecast_time}`);
+  async saveForecast(data: Forecast): Promise<Forecast> {
+    const forecast = await this.sql<Forecast[]>`
+    INSERT INTO forecast (
+    city,
+    forecast_time,
+    fetched_time,
+    temperature,
+    feels_like,
+    temp_min,
+    temp_max,
+    weather,
+    precipitation) VALUES (
+      ${data.city},
+      ${data.forecast_time},
+      ${data.fetched_time},
+      ${data.temperature},
+      ${data.feels_like},
+      ${data.temp_min},
+      ${data.temp_max},
+      ${data.weather},
+      ${data.precipitation ?? null})
+    RETURNING *;`;
+
+    return forecast[0];
   }
 
   // async getMostRecentWeather(

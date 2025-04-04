@@ -19,8 +19,8 @@ export class WeatherService {
           ...mapToFields(current),
         };
 
-        await this.repo.saveCurrentWeather(transformed);
-        console.log(`Saved current weather for ${transformed.city}`);
+        const saved = await this.repo.saveCurrentWeather(transformed);
+        console.log(`Done saving current weather for ${saved.city}`);
         return true;
       }
     } catch (err) {
@@ -34,18 +34,22 @@ export class WeatherService {
       const forecastList = await this.api.getForecast(city);
       if (!forecastList || !forecastList.list) return false;
 
-      for (const item of forecastList.list) {
+      const tasks = forecastList.list.map((item: any) => {
         const transformed: Forecast = {
           city,
           forecast_time: new Date(item.dt * 1000),
           fetched_time: new Date(),
           ...mapToFields(item),
         };
-        await this.repo.saveForecast(transformed);
-      }
+        return this.repo.saveForecast(transformed).then((saved) => {
+          console.log(
+            `Saved forecast for ${saved.city} at ${saved.forecast_time}`
+          );
+        });
+      });
 
-      console.log(`Saved forecast for ${city}`);
-
+      await Promise.all(tasks);
+      console.log(`Done saving forecast for ${city}`);
       return true;
     } catch (err) {
       console.error(`Failed to fetch/save forecast for ${city}`, err);
