@@ -1,4 +1,4 @@
-import { buildUrl } from "../util/transformers";
+import { buildUrl, retry } from "../util/util";
 
 const UNIT = "imperial";
 
@@ -14,25 +14,21 @@ export class WeatherApi {
   private async fetchData(endpoint: string, city: string): Promise<any> {
     const url = buildUrl(endpoint, city, UNIT);
 
-    try {
-      const res = await fetch(url);
+    return await retry(
+      async () => {
+        const res = await fetch(url);
 
-      if (!res.ok) {
-        throw new Error(`HTTP error: ${res.status}`);
-      }
+        if (!res.ok) {
+          throw new Error(`HTTP error: ${res.status}`);
+        }
 
-      return res.json();
-    } catch (err) {
-      if (err instanceof Error) {
-        console.error(`Error fetching ${endpoint} for ${city}`, err.message);
-      } else {
-        console.error(
-          `unknown error occurred while fetching ${endpoint} for ${city}`,
-          err
+        console.log(
+          `[${new Date().toLocaleString()}] Fetched ${endpoint} for ${city}`
         );
-      }
-    } finally {
-      console.log(`Done fetching ${endpoint} for ${city}`);
-    }
+        return res.json();
+      },
+      3,
+      1000
+    );
   }
 }
