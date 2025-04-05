@@ -90,7 +90,7 @@ export class WeatherService {
         };
         return this.repo.saveForecast(transformed).then((saved) => {
           Logger.info(
-            `Saved forecast ${tasks.length} for ${saved.city} at ${saved.forecast_time}`
+            `Saved forecast for ${saved.city} at ${saved.forecast_time}`
           );
         });
       });
