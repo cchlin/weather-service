@@ -29,8 +29,11 @@ const run = async () => {
   const service = new WeatherService(api, repo);
 
   console.log(`[${new Date().toLocaleString()}] Fetching and saving data...`);
-  await service.fetchSaveCurrent(cities);
-  await service.fetchSaveForecast(cities);
+  const current = await service.fetchSaveCurrent(cities);
+  const forecast = await service.fetchSaveForecast(cities);
+  if (!current || !forecast) {
+    console.error("[ERROR] Some fetch/save failed.");
+  }
   console.log(`[${new Date().toLocaleString()}] Done.`);
 
   await sql.end();
