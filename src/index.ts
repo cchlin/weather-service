@@ -18,6 +18,7 @@ import { WeatherRepo } from "./repository/WeatherRepo";
 import { WeatherService } from "./service/WeatherService";
 import { config } from "./config/config";
 import postgres from "postgres";
+import { Logger } from "./util/Logger";
 
 const api = new WeatherApi();
 const cities: string[] = ["Seattle", "New York", "Paris", "Taipei", "Tokyo"];
@@ -28,13 +29,13 @@ const run = async () => {
   const repo = new WeatherRepo(sql);
   const service = new WeatherService(api, repo);
 
-  console.log(`[${new Date().toLocaleString()}] Fetching and saving data...`);
+  Logger.info("Job start...");
   const current = await service.fetchSaveCurrent(cities);
   const forecast = await service.fetchSaveForecast(cities);
   if (!current || !forecast) {
-    console.error("[ERROR] Some fetch/save failed.");
+    Logger.error("Some fetch/save failed.");
   }
-  console.log(`[${new Date().toLocaleString()}] Done.`);
+  Logger.info("Job done.");
 
   await sql.end();
 };

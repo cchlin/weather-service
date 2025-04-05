@@ -1,4 +1,5 @@
 import { buildUrl, retry } from "../util/util";
+import { Logger } from "../util/Logger";
 
 const UNIT = "imperial";
 
@@ -13,22 +14,21 @@ export class WeatherApi {
 
   private async fetchData(endpoint: string, city: string): Promise<any> {
     const url = buildUrl(endpoint, city, UNIT);
+    const label = `${endpoint} for ${city}`;
 
-    return await retry(
-      async () => {
-        const res = await fetch(url);
+    return await retry(async () => {
+      Logger.info(`Fetching ${label}...`);
+      const res = await fetch(url);
 
-        if (!res.ok) {
-          throw new Error(`HTTP error: ${res.status}`);
-        }
-
-        console.log(
-          `[${new Date().toLocaleString()}] Fetched ${endpoint} for ${city}`
+      if (!res.ok) {
+        Logger.error(
+          `Fetch failed: ${label} returned ${res.status} ${res.statusText}`
         );
-        return res.json();
-      },
-      3,
-      1000
-    );
+        throw new Error(`HTTP error: ${res.status}`);
+      }
+
+      Logger.info(`Fetched ${endpoint} for ${city}`);
+      return res.json();
+    }, label);
   }
 }

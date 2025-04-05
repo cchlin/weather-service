@@ -1,4 +1,5 @@
 import { config } from "../config/config";
+import { Logger } from "./Logger";
 
 export const mapToFields = (
   source: any
@@ -39,9 +40,10 @@ export const buildUrl = (
 
 export const retry = async <T>(
   fn: () => Promise<T>,
-  retries = 3,
-  delay = 1000
+  label: string
 ): Promise<T> => {
+  let delay = 1000;
+  let retries = 3;
   let attempt = 0;
 
   while (attempt <= retries) {
@@ -52,7 +54,7 @@ export const retry = async <T>(
       if (attempt >= retries) {
         throw err;
       }
-      console.warn(`Retry (${attempt}/${retries})...`);
+      Logger.warn(`Retry ${label} (${attempt}/${retries})...`);
       await new Promise((res) => setTimeout(res, delay));
     }
   }
