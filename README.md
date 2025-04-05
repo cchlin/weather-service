@@ -65,6 +65,15 @@ npm test
 
 See `schema.sql` for table creation.
 
+## Design Decisions
+
+- **Modular Architecture**: I separate the module this way so they can each focus on their own things and easier to test
+- **Data Transformation**: The `mapToFields()` function cleanly decouples API structure from internal models, so changes in API format only need to be handled in one place.
+- **Database**: PostgreSQL is used with Supabase because I don't have it installed on my machine, and I thought when you check my code you don't need to do too much setup.
+- **No Framework Overhead**: The app is built as a plain Node.js console app without Express or web server components, since the challenge doesn't require an API.
+- **Test Focus**: Unit tests focus on the `WeatherService` layer, which contains the core logic of data fetching and saving.
+- **Short Interval Execution**: The fetch interval is set to 1 minute for easier demo/testing purposes.
+
 ## Architecture Flow
 
 ```
