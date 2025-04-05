@@ -11,8 +11,8 @@ export interface CurrentWeather {
 
 export interface Forecast {
   city: string;
-  forecast_time: Date;
-  fetched_time: Date;
+  forecast_time: Date; // when the forecast applies to
+  fetched_time: Date; // when we fetched this forecast from API
   temperature: number;
   feels_like: number;
   temp_min: number;

@@ -3,6 +3,8 @@ import postgres from "postgres";
 
 export class WeatherRepo {
   constructor(private sql: postgres.Sql) {}
+
+  // Inserts current weather data into DB and returns the inserted row
   async saveCurrentWeather(data: CurrentWeather): Promise<CurrentWeather> {
     const weather = await this.sql<
       CurrentWeather[]
@@ -28,6 +30,7 @@ export class WeatherRepo {
     return weather[0];
   }
 
+  // Inserts or updates forecast data (upsert on city + forecast_time)
   async saveForecast(data: Forecast): Promise<Forecast> {
     const forecast = await this.sql<Forecast[]>`
       INSERT INTO forecast (
@@ -65,6 +68,7 @@ export class WeatherRepo {
     return forecast[0];
   }
 
+  // Retrieves the most recent current weather record for a city
   async getMostRecentWeather(
     city: string
   ): Promise<CurrentWeather | undefined> {
@@ -77,6 +81,7 @@ export class WeatherRepo {
     return weather[0];
   }
 
+  // Retrieves up to 40 forecast records for a city ordered by forecast time
   async getForecast(city: string): Promise<Forecast[] | undefined> {
     const forecast = await this.sql<Forecast[]>`
       SELECT * FROM forecast
