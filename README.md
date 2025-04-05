@@ -45,8 +45,8 @@ npm install
 Create a `.env` file in the root:
 
 ```env
-API_KEY=your_openweathermap_api_key
-DATABASE_URL=postgres://user:password@localhost:5432/weather
+API_KEY=openweathermap_api_key
+DATABASE_URL=postgresql://postgres.ciufzdfrgrctrnnqfxcw:[db-password]@aws-0-us-east-1.pooler.supabase.com:5432/postgres
 ```
 
 ### 3. Run the App
