@@ -67,21 +67,30 @@ See `schema.sql` for table creation.
 
 ## Architecture Flow
 
-- WeatherService (Core logic layer)
--
-- +--------------------+
-- | WeatherApi (fetch)|
-- +--------------------+
--             |
-- fetch + retry logic
--             |
--             ▼
-- +---------------------+
-- | WeatherService |
-- +---------------------+
--     |                 |
-- saveCurrent saveForecast
--     |                 |
--     ▼                 ▼
-- WeatherRepo -----> PostgreSQL
-  \*/
+```
+        OpenWeatherMap API
+                |
+            Fetch data
+                v
+     +----------------------+     
+     |      WeatherApi      | 
+     +----------------------+
+                |
+             raw JSON                    
+                v
+     +----------------------+
+     |    WeatherService    | <----- cities/trigger -----> Etnry point
+     +----------------------+ 
+                |
+        TypeScript ojbect
+                v  
+     +----------------------+   
+     |      WeatherRepo     |  
+     +----------------------+  
+                |
+                |   
+                v          
++--------------------------------+ 
+| PostgreSQL Database (Supabase) |
++--------------------------------+
+```
