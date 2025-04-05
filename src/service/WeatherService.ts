@@ -1,6 +1,6 @@
 import { WeatherApi } from "./WeatherApi";
 import { WeatherRepo } from "../repository/WeatherRepo";
-import { mapToFields } from "../util/transformers";
+import { mapToFields } from "../util/util";
 import { CurrentWeather, Forecast } from "../model/weatherModels";
 
 export class WeatherService {

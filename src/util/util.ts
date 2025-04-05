@@ -36,3 +36,27 @@ export const buildUrl = (
 
   return url.href;
 };
+
+export const retry = async <T>(
+  fn: () => Promise<T>,
+  retries = 3,
+  delay = 1000
+): Promise<T> => {
+  let attempt = 0;
+
+  while (attempt <= retries) {
+    try {
+      return await fn(); // success
+    } catch (err) {
+      attempt++;
+      if (attempt >= retries) {
+        throw err;
+      }
+      console.warn(`Retry (${attempt}/${retries})...`);
+      await new Promise((res) => setTimeout(res, delay));
+    }
+  }
+
+  // unreachable but if I don't throw, typescirpt is not happy
+  throw new Error("Exceeded retires");
+};
